@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/2.3.0/css/reset.css"
+    media="screen">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+    /* 1rem = 10px */
+    font-size: 62.5%;
+    }
+
+    body{
+      margin: 0;
+    }
+    .eol-header-brand {
+      background: #ecedee;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .eol-header-brand img.logo {
+      max-height: 90px;
+      max-width: 90vw;
+    }
+
+    .eol-title {
+      text-align: center;
+      padding: 3.5rem;
+      background: #ecedee;
+      color: #000000;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      /* text-transform: uppercase; */
+    }
+
+    .eol-title h2 {
+      font-size: 4.5rem;
+    }
+
+    .disconnected {
+      margin: 20px;
+      text-align: center;
+    }
+
+    .disconnected img {
+      height: 33.2vw;
+      max-width: 100%;
+    }
+
+    @media screen and (max-width: 640px) {
+      .eol-title {
+        padding: 8rem;
+        /* background: blue; */
+      }
+
+      .disconnected img {
+        height: 47.2vw;
+        max-width: 100%;
+      }
+
+      .eol-title h2 {
+      font-size: 3rem;
+      }
+    }
+
+    @media screen and (min-width: 640px) and (max-width: 1280px) {
+      .eol-title {
+        padding: 5.5rem;
+        /* background: red; */
+      }
+
+      .disconnected img {
+        height: 27.2vw;
+        max-width: 100%;
+      }
+
+      .eol-title h2 {
+      font-size: 3.5rem;
+    }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="eol-header-brand">
+      <img class="logo" src="/virtualabx/page/logo-negro.png" />
+    </div>
+    <div class="disconnected">
+      <img src="/virtualabx/page/error.svg" />
+    </div>
+    <div class="eol-title">
+      <h2>Sitio no disponible</h2>
+      <!-- <br>
+      <p id="message">Hora estimada de regreso ... (Santiago/Chile)</p>
+      <br>
+      <p>Para solicitar ayuda comuníquese con virtual.labx@uchile.cl</p> -->
+    </div>
+
+  </div>
+</body>
+<script>
+  var messageDiv = document.getElementById("message");
+  fetch("/config/message.json").then(function(res){
+    if(res.status === 200 || res.status === 302 || res.status === 301){
+      return res.json().then(function(response){
+        messageDiv.innerHTML = response.message;
+      })
+    }else{
+      throw Error;
+    }
+  }).catch(function(error){
+    console.error(error)
+  })
+</script>
+
+</html>
