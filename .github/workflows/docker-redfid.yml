@@ -1,9 +1,11 @@
-name: Docker Image CI
+name: Redfid Docker Image CI
 
 on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'redfid'
   pull_request:
     types:
       - opened
@@ -11,6 +13,8 @@ on:
       - synchronize
     branches:
       - 'main'
+    paths:
+      - 'redfid'
 
 jobs:
   build:
@@ -21,10 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Build Virtual labx
-        run: docker build ./virtuallabx --file ./virtuallabx/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
-
-      - name: Build Norteamericano
+      - name: Build RedFID
         run: docker build ./redfid --file ./redfid/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:redfid-${GITHUB_SHA}
 
       - name: Login to GitHub Container Registry
@@ -37,5 +38,4 @@ jobs:
       - name: Push
         if: (github.ref == 'refs/heads/main')
         run: |
-          docker push ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
           docker push ghcr.io/eol-uchile/not-available-container:redfid-${GITHUB_SHA}
