@@ -1,13 +1,25 @@
 name: Docker Image CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - 'main'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v6
 
       - name: Build Virtual labx
         run: docker build ./virtuallabx --file ./virtuallabx/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
@@ -16,13 +28,14 @@ jobs:
         run: docker build ./norteamericano --file ./norteamericano/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:norteamericano-${GITHUB_SHA}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: eolito
-          password: ${{ secrets.CR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push
+        if: (github.ref == 'refs/heads/main')
         run: |
           docker push ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
           docker push ghcr.io/eol-uchile/not-available-container:norteamericano-${GITHUB_SHA}
