@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'virtuallabx/**'
   pull_request:
     types:
       - opened
@@ -11,6 +13,8 @@ on:
       - synchronize
     branches:
       - 'main'
+    paths:
+      - 'virtuallabx/**'
 
 jobs:
   build:
@@ -21,11 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Build Virtual labx
+      - name: Build Virtual-Labx
         run: docker build ./virtuallabx --file ./virtuallabx/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
-
-      - name: Build Norteamericano
-        run: docker build ./redfid --file ./redfid/Dockerfile --tag ghcr.io/eol-uchile/not-available-container:redfid-${GITHUB_SHA}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v4
@@ -38,4 +39,3 @@ jobs:
         if: (github.ref == 'refs/heads/main')
         run: |
           docker push ghcr.io/eol-uchile/not-available-container:virtuallabx-${GITHUB_SHA}
-          docker push ghcr.io/eol-uchile/not-available-container:redfid-${GITHUB_SHA}
